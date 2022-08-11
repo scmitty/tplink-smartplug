@@ -32,23 +32,24 @@ namespace GUI_tpLink_smartplug
                 return;
             }
             this.ipAddress = ipAddress_txtb.Text;
-            if(CheckIpAddress(this.ipAddress))
+            if (CheckIpAddress(this.ipAddress))
             {
+                statusConnection = true;
                 try
                 {
 
                     this.plugResponse = Utils.SendToSmartPlugOrSwitch(ipAddress, Commands.SysInfoAndEmeter());
                     var outputData = JsonConvert.SerializeObject(this.plugResponse, Formatting.Indented);
-                    infoDevice_lb = outputData;
-                    statusConnection = true;
-
+                    infoDevice_lb.Text = outputData;
+                    
                 }
                 catch (Exception ex)
                 {
                     statusConnection = false;
                     MessageBox.Show("Error: " + ex.Message.ToString());
                 }
-            }else
+            }
+            else
             {
                 MessageBox.Show("IP address not valid");
                 ipAddress_txtb.Text = "";
@@ -57,13 +58,13 @@ namespace GUI_tpLink_smartplug
 
         private void turnOn_btn_Click(object sender, EventArgs e)
         {
-            if(this.ipAddress != "" && CheckIpAddress(this.ipAddress))
+            if (this.ipAddress != "")
             {
                 if (this.statusConnection)
                 {
                     try
                     {
-                        Utils.SendToSmartPlugOrSwitch(ipAddress, Commands.TurnOn());
+                        Utils.SendToSmartPlugOrSwitch(this.ipAddress, Commands.TurnOn());
                         MessageBox.Show("SmartPlug status change to on");
                     }
                     catch (Exception ex)
@@ -81,13 +82,13 @@ namespace GUI_tpLink_smartplug
 
         private void turnOff_btn_Click(object sender, EventArgs e)
         {
-            if (this.ipAddress != "" && CheckIpAddress(this.ipAddress))
+            if (this.ipAddress != "")
             {
                 if (this.statusConnection)
                 {
                     try
                     {
-                        Utils.SendToSmartPlugOrSwitch(ipAddress, Commands.TurnOff());
+                        Utils.SendToSmartPlugOrSwitch(this.ipAddress, Commands.TurnOff());
                         MessageBox.Show("SmartPlug status change to off");
                     }
                     catch (Exception ex)
